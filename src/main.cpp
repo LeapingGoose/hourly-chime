@@ -1,16 +1,21 @@
+// TODO: Make it only chime once an hour. When chiming, figure out how much
+// longer until the end of the hour and then start again from there.
+
 #include <Arduino.h>
 #include <Wire.h>
 #include <pitches.h>
 
 const int PIN_LED = 2;
 const int PIN_BUZZ = 21;
-const int INTERVAL_SECS = 60 * 60;     // 1 hour
-const int MIN_DISTANCE_SECS = 15 * 60; // 15 minutes
-// const int INTERVAL_SECS = 60;     // 1 minute
-// const int MIN_DISTANCE_SECS = 15; // 15 seconds
+// const int INTERVAL_SECS = 60 * 60;     // 1 hour
+// const int MIN_DISTANCE_SECS = 15 * 60; // 15 minutes
+const int INTERVAL_SECS = 60;     // 1 minute
+const int MIN_DISTANCE_SECS = 15; // 15 seconds
 
-int pauseDurationSecs = 0;
-int currentSecs = 0;
+int secondsUntilChime = 0;
+int intervalCounter = 0;
+// int timeUntilEndOfInterval = INTERVAL_SECS;
+bool chimedInInterval = false;
 
 const int buzzerChannel = 0;
 const int pwmFrequency = 1000; // Frequency in Hz
@@ -61,31 +66,49 @@ void setup()
 
   Serial.begin(115200);
   randomSeed(analogRead(A0));
-  pauseDurationSecs = constrainedWeightedRandom(INTERVAL_SECS, MIN_DISTANCE_SECS);
+  secondsUntilChime = constrainedWeightedRandom(INTERVAL_SECS, MIN_DISTANCE_SECS);
 
-  printf("Interval........... %d seconds.\n", INTERVAL_SECS);
-  printf("Min Distance....... %d seconds.\n", MIN_DISTANCE_SECS);
-  printf("Next flash in...... %d seconds.\n\n", pauseDurationSecs);
+  printf("\n\nInterval........... %d seconds.\n", INTERVAL_SECS);
+  printf("Min distance....... %d seconds.\n", MIN_DISTANCE_SECS);
+  printf("Next chime in...... %d seconds.\n\n", secondsUntilChime);
 }
 
 void loop()
 {
-  printf("currentSecs........ %d\n", currentSecs);
-  printf("pauseDurationSecs.. %d\n\n", pauseDurationSecs);
-
   // Indicates seconds using onboard LED
   digitalWrite(PIN_LED, HIGH);
   delay(50);
   digitalWrite(PIN_LED, LOW);
   delay(950);
 
-  currentSecs++;
+  intervalCounter++;
 
-  if (currentSecs >= pauseDurationSecs)
+  if (chimedInInterval)
   {
-    currentSecs = 0;
-    pauseDurationSecs = constrainedWeightedRandom(INTERVAL_SECS, MIN_DISTANCE_SECS);
-    printf("Next flash in...... %d seconds.\n", pauseDurationSecs);
+    printf("Counting to end of interval... %d seconds.\n\n",
+           INTERVAL_SECS - intervalCounter);
+  }
+  else
+  {
+    printf("secondsUntilChime............. %d\n\n", secondsUntilChime);
+  }
+  printf("intervalCounter............... %d seconds\n", intervalCounter);
+
+  if (intervalCounter >= secondsUntilChime && chimedInInterval == false)
+  {
+    chimedInInterval = true;
     triggerChime();
+    printf("Chimed at %d seconds.\n", intervalCounter);
+    printf("End of interval in %d seconds.\n\n", INTERVAL_SECS - intervalCounter);
+    secondsUntilChime = -1;
+  }
+
+  if (intervalCounter >= INTERVAL_SECS)
+  {
+    intervalCounter = 0;
+    chimedInInterval = false;
+    secondsUntilChime = constrainedWeightedRandom(INTERVAL_SECS, MIN_DISTANCE_SECS);
+    printf("End of interval.\nNext chime in................. %d seconds.\n\n",
+           secondsUntilChime);
   }
 }
