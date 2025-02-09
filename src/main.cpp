@@ -4,10 +4,10 @@
 
 const int PIN_LED = 2;
 const int PIN_BUZZ = 21;
-// const int INTERVAL_SECS = 60 * 60;     // 1 hour
-// const int MIN_DISTANCE_SECS = 15 * 60; // 15 minutes
-const int INTERVAL_SECS = 60;     // 1 minute
-const int MIN_DISTANCE_SECS = 15; // 15 seconds
+const int INTERVAL_SECS = 60 * 60;     // 1 hour
+const int MIN_DISTANCE_SECS = 15 * 60; // 15 minutes
+// const int INTERVAL_SECS = 60;     // 1 minute
+// const int MIN_DISTANCE_SECS = 15; // 15 seconds
 
 int pauseDurationSecs = 0;
 int currentSecs = 0;
@@ -39,7 +39,8 @@ void playSmoothDing(int frequency, int duration)
   for (int dutyCycle = 150; dutyCycle >= 0; dutyCycle -= 5)
   {
     ledcWrite(buzzerChannel, dutyCycle);
-    delay(duration / 51); // Adjust delay to control fade-out speed
+    // Adjust delay to control fade-out speed
+    delay(duration / 51);
   }
 
   // Stop the tone
