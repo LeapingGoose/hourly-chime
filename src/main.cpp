@@ -30,7 +30,7 @@ int constrainedWeightedRandom(int intervalSecs, int minDistanceSecs)
 }
 
 // Play a single, fading 'ding' sound.
-void playSmoothDing(int frequency, int duration)
+void playChime(int frequency, int duration)
 {
   // Set the frequency for the tone
   ledcWriteTone(buzzerChannel, frequency);
@@ -49,7 +49,7 @@ void playSmoothDing(int frequency, int duration)
 
 void triggerChime()
 {
-  playSmoothDing(NOTE_C4, 1500);
+  playChime(NOTE_C4, 1500);
 }
 
 void setup()
