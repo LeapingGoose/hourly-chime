@@ -7,14 +7,13 @@
 
 const int PIN_LED = 2;
 const int PIN_BUZZ = 21;
-// const int INTERVAL_SECS = 60 * 60;     // 1 hour
-// const int MIN_DISTANCE_SECS = 15 * 60; // 15 minutes
-const int INTERVAL_SECS = 60;     // 1 minute
-const int MIN_DISTANCE_SECS = 15; // 15 seconds
+const int INTERVAL_SECS = 60 * 60;     // 1 hour
+const int MIN_DISTANCE_SECS = 15 * 60; // 15 minutes
+// const int INTERVAL_SECS = 60;     // 1 minute
+// const int MIN_DISTANCE_SECS = 15; // 15 seconds
 
 int secondsUntilChime = 0;
 int intervalCounter = 0;
-// int timeUntilEndOfInterval = INTERVAL_SECS;
 bool chimedInInterval = false;
 
 const int buzzerChannel = 0;
