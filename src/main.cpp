@@ -6,7 +6,7 @@
 Debug mode has an interval of 60 seconds and a minimum distance of 15 seconds.
 Otherwise, the interval is 60 minutes and the minimum distance is 15 minutes.
 */
-// #define DEBUG
+#define DEBUG
 
 const int PIN_SECONDS_INDICATOR_LED = 2;
 
@@ -49,14 +49,18 @@ void triggerChime()
 
 void setup()
 {
-  pinMode(PIN_SECONDS_INDICATOR_LED, OUTPUT);
+#ifdef DEBUG
   Serial.begin(115200);
+#endif
+  pinMode(PIN_SECONDS_INDICATOR_LED, OUTPUT);
   randomSeed(analogRead(A0));
   secondsUntilChime = constrainedWeightedRandom(INTERVAL_SECS, MIN_DISTANCE_SECS);
 
+#ifdef DEBUG
   printf("\n\nInterval........... %d seconds.\n", INTERVAL_SECS);
   printf("Min distance....... %d seconds.\n", MIN_DISTANCE_SECS);
   printf("Next chime in...... %d seconds.\n\n", secondsUntilChime);
+#endif
 }
 
 void loop()
@@ -68,24 +72,29 @@ void loop()
 
   intervalCounter++;
 
+#ifdef DEBUG
+  printf("intervalCounter............... %d seconds\n", intervalCounter);
   if (chimedInInterval)
   {
-    printf("Counting to end of interval... %d seconds.\n",
+    printf("Counting to end of interval... %d seconds.\n\n",
            INTERVAL_SECS - intervalCounter);
   }
   else
   {
-    printf("secondsUntilChime............. %d\n", secondsUntilChime);
+    printf("secondsUntilChime............. %d\n\n", secondsUntilChime);
   }
-  printf("intervalCounter............... %d seconds\n\n", intervalCounter);
+#endif
 
   if (intervalCounter >= secondsUntilChime && chimedInInterval == false)
   {
     chimedInInterval = true;
     triggerChime();
+    secondsUntilChime = -1;
+
+#ifdef DEBUG
     printf("Chimed at %d seconds.\n", intervalCounter);
     printf("End of interval in %d seconds.\n\n", INTERVAL_SECS - intervalCounter);
-    secondsUntilChime = -1;
+#endif
   }
 
   if (intervalCounter >= INTERVAL_SECS)
@@ -93,7 +102,10 @@ void loop()
     intervalCounter = 0;
     chimedInInterval = false;
     secondsUntilChime = constrainedWeightedRandom(INTERVAL_SECS, MIN_DISTANCE_SECS);
+
+#ifdef DEBUG
     printf("End of interval.\nNext chime in................. %d seconds.\n\n",
            secondsUntilChime);
+#endif
   }
 }
