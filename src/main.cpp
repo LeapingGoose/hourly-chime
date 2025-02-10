@@ -2,6 +2,10 @@
 #include <Wire.h>
 #include "Buzzer.h"
 
+/*
+Debug mode has an interval of 60 seconds and a minimum distance of 15 seconds.
+Otherwise, the interval is 60 minutes and the minimum distance is 15 minutes.
+*/
 // #define DEBUG
 
 const int PIN_SECONDS_INDICATOR_LED = 2;
