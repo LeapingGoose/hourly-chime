@@ -1,3 +1,21 @@
+#ifndef BUZZER_H
+#define BUZZER_H
+
+#include <Arduino.h>
+
+class Buzzer
+{
+public:
+  Buzzer(int pin, int channel, int frequency, int resolution);
+  void playChime(int frequency, int duration);
+
+private:
+  int pin;
+  int channel;
+  int frequency;
+  int resolution;
+};
+
 /*************************************************
  * Public Constants
  *************************************************/
@@ -91,3 +109,5 @@
 #define NOTE_CS8 4435
 #define NOTE_D8 4699
 #define NOTE_DS8 4978
+
+#endif // BUZZER_H
