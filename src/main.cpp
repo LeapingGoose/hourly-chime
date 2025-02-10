@@ -2,11 +2,17 @@
 #include <Wire.h>
 #include "Buzzer.h"
 
+// #define DEBUG
+
 const int PIN_SECONDS_INDICATOR_LED = 2;
+
+#ifdef DEBUG
+const int INTERVAL_SECS = 60;     // 1 minute
+const int MIN_DISTANCE_SECS = 15; // 15 seconds
+#else
 const int INTERVAL_SECS = 60 * 60;     // 1 hour
 const int MIN_DISTANCE_SECS = 15 * 60; // 15 minutes
-// const int INTERVAL_SECS = 60;     // 1 minute
-// const int MIN_DISTANCE_SECS = 15; // 15 seconds
+#endif
 
 int secondsUntilChime = 0;
 int intervalCounter = 0;
