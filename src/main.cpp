@@ -49,14 +49,12 @@ void triggerChime()
 
 void setup()
 {
-#ifdef DEBUG
-  Serial.begin(115200);
-#endif
   pinMode(PIN_SECONDS_INDICATOR_LED, OUTPUT);
   randomSeed(analogRead(A0));
   secondsUntilChime = constrainedWeightedRandom(INTERVAL_SECS, MIN_DISTANCE_SECS);
 
 #ifdef DEBUG
+  Serial.begin(115200);
   printf("\n\nInterval........... %d seconds.\n", INTERVAL_SECS);
   printf("Min distance....... %d seconds.\n", MIN_DISTANCE_SECS);
   printf("Next chime in...... %d seconds.\n\n", secondsUntilChime);
@@ -90,7 +88,6 @@ void loop()
     chimedInInterval = true;
     triggerChime();
     secondsUntilChime = -1;
-
 #ifdef DEBUG
     printf("Chimed at %d seconds.\n", intervalCounter);
     printf("End of interval in %d seconds.\n\n", INTERVAL_SECS - intervalCounter);
@@ -102,7 +99,6 @@ void loop()
     intervalCounter = 0;
     chimedInInterval = false;
     secondsUntilChime = constrainedWeightedRandom(INTERVAL_SECS, MIN_DISTANCE_SECS);
-
 #ifdef DEBUG
     printf("End of interval.\nNext chime in................. %d seconds.\n\n",
            secondsUntilChime);
