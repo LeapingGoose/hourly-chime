@@ -8,7 +8,9 @@ Otherwise, the interval is 60 minutes and the minimum distance is 15 minutes.
 */
 #define DEBUG
 
-const int PIN_SECONDS_INDICATOR_LED = 2;
+const int PIN_SECS_IND_LED = 2;
+const int BUZZER_DURATION = 1500;
+const int BUZZER_NOTE = NOTE_C4;
 
 #ifdef DEBUG
 const int INTERVAL_SECS = 60;     // 1 minute
@@ -18,7 +20,7 @@ const int INTERVAL_SECS = 60 * 60;     // 1 hour
 const int MIN_DISTANCE_SECS = 15 * 60; // 15 minutes
 #endif
 
-int secondsUntilChime = 0;
+int secsUntilChime = 0;
 int intervalCounter = 0;
 bool chimedInInterval = false;
 
@@ -44,28 +46,28 @@ int constrainedWeightedRandom(int intervalSecs, int minDistanceSecs)
 
 void triggerChime()
 {
-  buzzer.playChime(NOTE_C4, 1500);
+  buzzer.playChime(BUZZER_NOTE, BUZZER_DURATION);
 }
 
 void setup()
 {
-  pinMode(PIN_SECONDS_INDICATOR_LED, OUTPUT);
+  pinMode(PIN_SECS_IND_LED, OUTPUT);
   randomSeed(analogRead(A0));
-  secondsUntilChime = constrainedWeightedRandom(INTERVAL_SECS, MIN_DISTANCE_SECS);
+  secsUntilChime = constrainedWeightedRandom(INTERVAL_SECS, MIN_DISTANCE_SECS);
 
 #ifdef DEBUG
   Serial.begin(115200);
   printf("\n\nInterval........... %d seconds.\n", INTERVAL_SECS);
   printf("Min distance....... %d seconds.\n", MIN_DISTANCE_SECS);
-  printf("Next chime in...... %d seconds.\n\n", secondsUntilChime);
+  printf("Next chime in...... %d seconds.\n\n", secsUntilChime);
 #endif
 }
 
 void loop()
 {
-  digitalWrite(PIN_SECONDS_INDICATOR_LED, HIGH);
+  digitalWrite(PIN_SECS_IND_LED, HIGH);
   delay(50);
-  digitalWrite(PIN_SECONDS_INDICATOR_LED, LOW);
+  digitalWrite(PIN_SECS_IND_LED, LOW);
   delay(950);
 
   intervalCounter++;
@@ -79,15 +81,15 @@ void loop()
   }
   else
   {
-    printf("secondsUntilChime............. %d\n\n", secondsUntilChime);
+    printf("secsUntilChime............. %d\n\n", secsUntilChime);
   }
 #endif
 
-  if (intervalCounter >= secondsUntilChime && chimedInInterval == false)
+  if (intervalCounter >= secsUntilChime && chimedInInterval == false)
   {
     chimedInInterval = true;
     triggerChime();
-    secondsUntilChime = -1;
+    secsUntilChime = -1;
 #ifdef DEBUG
     printf("Chimed at %d seconds.\n", intervalCounter);
     printf("End of interval in %d seconds.\n\n", INTERVAL_SECS - intervalCounter);
@@ -98,10 +100,10 @@ void loop()
   {
     intervalCounter = 0;
     chimedInInterval = false;
-    secondsUntilChime = constrainedWeightedRandom(INTERVAL_SECS, MIN_DISTANCE_SECS);
+    secsUntilChime = constrainedWeightedRandom(INTERVAL_SECS, MIN_DISTANCE_SECS);
 #ifdef DEBUG
     printf("End of interval.\nNext chime in................. %d seconds.\n\n",
-           secondsUntilChime);
+           secsUntilChime);
 #endif
   }
 }
