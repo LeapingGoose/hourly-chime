@@ -6,7 +6,7 @@
 Debug mode has an interval of 60 seconds and a minimum distance of 15 seconds.
 Otherwise, the interval is 60 minutes and the minimum distance is 15 minutes.
 */
-#define DEBUG
+// #define DEBUG
 
 const int PIN_SECS_IND_LED = 2;
 const int BUZZER_DURATION = 1500;
